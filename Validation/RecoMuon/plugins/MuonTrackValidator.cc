@@ -999,7 +999,7 @@ void MuonTrackValidator::analyze(const edm::Event& event, const edm::EventSetup&
         bool Track_is_matched_075 = false;
         bool Track_is_matched_050 = false;
 	RefToBase<Track> track(trackCollection, i);
-    if(track->hitPattern().muonStationsWithValidHits() <= 1) continue;
+    //if(track->hitPattern().muonStationsWithValidHits() <= 1) continue;
     //if((track->numberOfValidHits()) == 0) continue;
 	rT++;
           
