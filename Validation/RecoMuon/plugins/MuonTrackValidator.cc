@@ -557,12 +557,8 @@ void MuonTrackValidator::analyze(const edm::Event& event, const edm::EventSetup&
   if (UseAssociators) {
     edm::Handle<reco::TrackToTrackingParticleAssociator> theAssociator;
     for (unsigned int w=0;w<associators.size();w++) {
-        cout<<"ngul a sord "<<associators[w].c_str()<<endl;
       event.getByLabel(associators[w],theAssociator);
-        cout<<"ngul a sord "<<theAssociator.isValid()<<endl;
       associator.push_back( theAssociator.product() );
-        cout<<"ngul a sord"<<endl;
-
     }
   }
     
@@ -748,7 +744,7 @@ void MuonTrackValidator::analyze(const edm::Event& event, const edm::EventSetup&
 	    RefToBase<Track> assoc_recoTrack = rt.begin()->first;
 	    edm::LogVerbatim("MuonTrackValidator")<<"-----------------------------associated Track #"<<assoc_recoTrack.key();
           
-        if(assoc_recoTrack->hitPattern().muonStationsWithValidHits() > 1){
+        //if(assoc_recoTrack->hitPattern().muonStationsWithValidHits() > 1){
             TP_is_matched = true;
             ats++;
             quality = rt.begin()->second;
@@ -768,7 +764,7 @@ void MuonTrackValidator::analyze(const edm::Event& event, const edm::EventSetup&
                     Quality05 = true;
                 }
             }
-        }
+        //}
 	  }
 	}else{
 	  edm::LogVerbatim("MuonTrackValidator")
