@@ -76,7 +76,6 @@ edm::OwnVector<GEMRecHit> GEMRecHitBaseAlgo::reconstruct(const GEMEtaPartition& 
 
     }
 
-    result.push_back(recHit);
   }
   return result;
 }
