@@ -56,6 +56,8 @@ me0MuonTightTrackVMuonAssoc = Validation.RecoMuon.MuonTrackValidator_cfi.muonTra
 me0MuonTightTrackVMuonAssoc.associatormap = 'tpToME0MuonTightMuonAssociation'
 me0MuonTightTrackVMuonAssoc.associators = ('MuonAssociationByHits',)
 me0MuonTightTrackVMuonAssoc.label = ('me0Muon',)
+me0MuonTightTrackVMuonAssoc.minRapidityTP = -2.8
+me0MuonTightTrackVMuonAssoc.maxRapidityTP = 2.8
 me0MuonTightTrackVMuonAssoc.usetracker = True
 me0MuonTightTrackVMuonAssoc.usemuon = False
 
@@ -825,8 +827,8 @@ muonValidation_seq = cms.Sequence(
     #+ tightModMuonTrackVSelUncMuonAssoc
 # 	+ tightModMuonTrackVSel05MuonAssoc
 #   + tightModMuonTrackVSel05SimMuonAssoc
-#   +gemMuonTrackVMuonAssoc
-#   +me0MuonTightTrackVMuonAssoc
+    +gemMuonTrackVMuonAssoc
+    +me0MuonTightTrackVMuonAssoc
 #
 #	+ recoMuonVMuAssoc_trk+recoMuonVMuAssoc_sta+recoMuonVMuAssoc_glb+recoMuonVMuAssoc_tgt
 	#+ bestMuonLooseTrackVTrackAssoc #+ bestMuonLooseTrackVTrackAssoc5

@@ -86,13 +86,13 @@ void FitSlicesYTool::getFittedSigmaWithError(MonitorElement * me){
 void FitSlicesYTool::getRMS(MonitorElement * me){
   if (!(h2D&&me)) throw cms::Exception("FitSlicesYTool") << "Pointer =0 : h2D=" << h2D << " me=" << me;
   if (h2D->GetNbinsX()==me->getNbinsX()){
-    for (int bin=1;bin!=h2D->GetNbinsX();bin++){
-      TH1D * tmp = h2D->ProjectionY(" ", bin, bin);
+    for (int bin=0;bin!=h2D->GetNbinsX();bin++){
+      TH1D * tmp = h2D->ProjectionY(" ", bin+1, bin+1);
       double rms = tmp->GetRMS();
       double rmsErr = tmp->GetRMSError();
       tmp->Delete();
-      me->setBinContent(bin,rms);
-      me->setBinError(bin,rmsErr);
+      me->setBinContent(bin+1,rms);
+      me->setBinError(bin+1,rmsErr);
     }
   } else {
     throw cms::Exception("FitSlicesYTool") << "Different number of bins!";

@@ -691,14 +691,14 @@ void MuonTrackProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
       else if (trackType == "gemmuon") {
         if (muon->innerTrack().isNonnull() && muon->isGEMMuon()){
             trackref = muon->innerTrack();
-            //std::cout<<"gemmuon: "<<trackref->pt()<<std::endl;
+            //std::cout<<"gemmuon: "<<muon->isGEMMuon()<<" "<<trackref->pt()<<std::endl;
         }
         else continue;
       }
       else if (trackType == "me0muon") {
         if (muon->innerTrack().isNonnull() && muon->isME0Muon()){
             trackref = muon->innerTrack();
-            //std::cout<<"me0muon: "<<trackref->pt()<<std::endl;
+            //std::cout<<"me0muon: "<<muon->isME0Muon()<<" "<<trackref->pt()<<std::endl;
         }
         else continue;
       }

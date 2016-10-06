@@ -169,7 +169,7 @@ bestMuon_seq = cms.Sequence(
     *bestMuonTight * bestMuonTight5
     *bestMuonLooseMod * bestMuonLooseMod5
     *bestMuonTightMod * bestMuonTightMod5
-    #*gemMuon * me0Muon
+    *gemMuon * me0Muon
 )
 
 import SimMuon.MCTruth.MuonTrackProducer_cfi
@@ -951,8 +951,8 @@ muonAssociation_seq = cms.Sequence(
 #    +(tpToStaSeedAssociation+tpToStaMuonAssociation
     +tpToStaUpdMuonAssociation
     +tpToGlbMuonAssociation
-    #+tpToME0MuonTightMuonAssociation
-    #+tpToGEMMuonMuonAssociation
+    +tpToME0MuonTightMuonAssociation
+    +tpToGEMMuonMuonAssociation
     #)
     #+(
 	#tpToStaMuonAssociation+
