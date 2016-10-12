@@ -26,6 +26,7 @@ class MuonTrackValidator : public DQMEDAnalyzer, protected MuonTrackValidatorBas
     tpSelector = TrackingParticleSelector(pset.getParameter<double>("ptMinTP"),
 					  pset.getParameter<double>("minRapidityTP"),
 					  pset.getParameter<double>("maxRapidityTP"),
+                      pset.getParameter<bool>("useAbsEta"),
 					  pset.getParameter<double>("tipTP"),
 					  pset.getParameter<double>("lipTP"),
 					  pset.getParameter<int>("minHitTP"),
