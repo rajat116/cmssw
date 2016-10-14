@@ -780,14 +780,14 @@ void MuonTrackValidator::analyze(const edm::Event& event, const edm::EventSetup&
 	  if (nTrueVertices>=vtxintervals[w][f]&&
 	      nTrueVertices<vtxintervals[w][f+1]) {
 	    totSIMvtx[w][f]++;
-	    if(fabs(momentumTP.eta()) < 1.2) totSIMvtxBarrel[w][f]++;
-	    else if(fabs(momentumTP.eta()) > 1.2 && fabs(momentumTP.eta()) < 1.7) totSIMvtxOverlap[w][f]++;
-	    else if(fabs(momentumTP.eta()) > 1.7) totSIMvtxEndcap[w][f]++;
+	    if(fabs(momentumTP.eta()) < 0.9) totSIMvtxBarrel[w][f]++;
+	    else if(fabs(momentumTP.eta()) > 0.9 && fabs(momentumTP.eta()) < 1.2) totSIMvtxOverlap[w][f]++;
+	    else if(fabs(momentumTP.eta()) > 1.2) totSIMvtxEndcap[w][f]++;
 	    if (TP_is_matched) {
 	      totASSvtx[w][f]++;
-	      if(fabs(momentumTP.eta()) < 1.2) totASSvtxBarrel[w][f]++;
-	      else if(fabs(momentumTP.eta()) > 1.2 && fabs(momentumTP.eta()) < 1.7) totASSvtxOverlap[w][f]++;
-	      else if(fabs(momentumTP.eta()) > 1.7) totASSvtxEndcap[w][f]++;
+	      if(fabs(momentumTP.eta()) < 0.9) totASSvtxBarrel[w][f]++;
+	      else if(fabs(momentumTP.eta()) > 0.9 && fabs(momentumTP.eta()) < 1.2) totASSvtxOverlap[w][f]++;
+	      else if(fabs(momentumTP.eta()) > 1.2) totASSvtxEndcap[w][f]++;
 
 	      /*if (MABH) {
 		if (Quality075) {
