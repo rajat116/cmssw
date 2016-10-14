@@ -145,7 +145,7 @@ gemMuon = cms.EDProducer("MuonTrackProducer",
    inputDTRecSegment4DCollection = cms.InputTag("dt4DSegments"),
    inputCSCSegmentCollection = cms.InputTag("cscSegments"),
    vtxTag = cms.InputTag("selectedVertices"),
-   selectionTags = cms.vstring('AllTrackerMuons'),
+   selectionTags = cms.vstring('All'),
    trackType = cms.string('gemmuon')
 )
 
@@ -154,7 +154,7 @@ me0Muon = cms.EDProducer("MuonTrackProducer",
    inputDTRecSegment4DCollection = cms.InputTag("dt4DSegments"),
    inputCSCSegmentCollection = cms.InputTag("cscSegments"),
    vtxTag = cms.InputTag("selectedVertices"),
-   selectionTags = cms.vstring('AllTrackerMuons'),
+   selectionTags = cms.vstring('All'),
    trackType = cms.string('me0muon')
 )
 
