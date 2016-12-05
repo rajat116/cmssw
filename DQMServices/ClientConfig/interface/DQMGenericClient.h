@@ -95,7 +95,7 @@ class DQMGenericClient : public DQMEDHarvester
 			  const std::string& cdName,
                           bool ascending=true);
 
-  void limitedFit(MonitorElement * srcME, MonitorElement * meanME, MonitorElement * sigmaME);
+  void limitedFit(MonitorElement * srcME, MonitorElement * meanME, MonitorElement * sigmaME, MonitorElement * rmsME);
 
  private:
   unsigned int verbose_;

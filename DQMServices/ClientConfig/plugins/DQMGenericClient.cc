@@ -650,12 +650,14 @@ void DQMGenericClient::computeResolution(DQMStore::IBooker& ibooker, DQMStore::I
   float * lowedgesfloats = new float[nBin+1];
   ME* meanME;
   ME* sigmaME;
+  ME* rmsME;
   if (hSrc->GetXaxis()->GetXbins()->GetSize())
   {
     for (int j=0; j<nBin+1; ++j)
       lowedgesfloats[j] = (float)hSrc->GetXaxis()->GetXbins()->GetAt(j);
     meanME = ibooker.book1D(newPrefix+"_Mean", titlePrefix+" Mean", nBin, lowedgesfloats);
     sigmaME = ibooker.book1D(newPrefix+"_Sigma", titlePrefix+" Sigma", nBin, lowedgesfloats);
+    rmsME = ibooker.book1D(newPrefix+"_RMS", titlePrefix+" RMS", nBin, lowedgesfloats);
   }
   else
   {
@@ -664,21 +666,26 @@ void DQMGenericClient::computeResolution(DQMStore::IBooker& ibooker, DQMStore::I
 			    hSrc->GetXaxis()->GetXmax());
     sigmaME = ibooker.book1D(newPrefix+"_Sigma", titlePrefix+" Sigma", nBin,
 			    hSrc->GetXaxis()->GetXmin(),
-			    hSrc->GetXaxis()->GetXmax());			     
+			    hSrc->GetXaxis()->GetXmax());
+    rmsME = ibooker.book1D(newPrefix+"_RMS", titlePrefix+" RMS", nBin,
+			    hSrc->GetXaxis()->GetXmin(),
+			    hSrc->GetXaxis()->GetXmax());
   }
   
-  if (meanME && sigmaME)
+  if(meanME && sigmaME && rmsME)
   {
     meanME->setEfficiencyFlag();
     sigmaME->setEfficiencyFlag();
+    rmsME->setEfficiencyFlag();
 
     if (! resLimitedFit_ ) {
       FitSlicesYTool fitTool(srcME);
       fitTool.getFittedMeanWithError(meanME);
       fitTool.getFittedSigmaWithError(sigmaME);
       ////  fitTool.getFittedChisqWithError(chi2ME); // N/A
+      fitTool.getRMS(rmsME);
     } else {
-      limitedFit(srcME,meanME,sigmaME);
+      limitedFit(srcME,meanME,sigmaME,rmsME);
     }
   }
   delete[] lowedgesfloats;
@@ -838,7 +845,7 @@ void DQMGenericClient::makeCumulativeDist(DQMStore::IBooker& ibooker, DQMStore::
   return;
 }
 
-void DQMGenericClient::limitedFit(MonitorElement * srcME, MonitorElement * meanME, MonitorElement * sigmaME)
+void DQMGenericClient::limitedFit(MonitorElement * srcME, MonitorElement * meanME, MonitorElement * sigmaME, MonitorElement * rmsME)
 {
   TH2F * histo = srcME->getTH2F();
 
@@ -853,6 +860,8 @@ void DQMGenericClient::limitedFit(MonitorElement * srcME, MonitorElement * meanM
     TString iString(i);
     TH1 *histoY =  histo->ProjectionY(" ", i, i);
     double cont = histoY->GetEntries();
+    double rms = histoY->GetRMS();
+    double rmsErr = histoY->GetRMSError();
 
     if (cont >= cont_min) {
       float minfit = histoY->GetMean() - histoY->GetRMS();
@@ -877,6 +886,9 @@ void DQMGenericClient::limitedFit(MonitorElement * srcME, MonitorElement * meanM
       sigmaME->setBinError(i, err[2]);
 //       sigmaME->setBinEntries(i, 1.);
 //       sigmaME->setBinError(i,sqrt(err[2]*err[2]+par[2]*par[2]));
+        
+      rmsME->setBinContent(i, rms);
+      rmsME->setBinError(i, rmsErr);
 
       if(fitFcn) delete fitFcn;
       if(histoY) delete histoY;
