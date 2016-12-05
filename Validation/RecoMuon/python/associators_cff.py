@@ -140,24 +140,6 @@ bestMuonTightMod5 = cms.EDProducer("MuonTrackProducer",
 
 #-----------------------------------------------------------------------------------------------------------------------
 
-gemMuon = cms.EDProducer("MuonTrackProducer",
-   muonsTag = cms.InputTag("muons"),
-   inputDTRecSegment4DCollection = cms.InputTag("dt4DSegments"),
-   inputCSCSegmentCollection = cms.InputTag("cscSegments"),
-   vtxTag = cms.InputTag("selectedVertices"),
-   selectionTags = cms.vstring('All'),
-   trackType = cms.string('gemmuon')
-)
-
-me0Muon = cms.EDProducer("MuonTrackProducer",
-   muonsTag = cms.InputTag("muons"),
-   inputDTRecSegment4DCollection = cms.InputTag("dt4DSegments"),
-   inputCSCSegmentCollection = cms.InputTag("cscSegments"),
-   vtxTag = cms.InputTag("selectedVertices"),
-   selectionTags = cms.vstring('All'),
-   trackType = cms.string('me0muon')
-)
-
 me0MuonInd = cms.EDProducer("ME0MuonTrackCollProducer",
     me0MuonTag = cms.InputTag("me0SegmentMatching"),
     selectionTags = cms.vstring('All'),
@@ -174,7 +156,7 @@ bestMuon_seq = cms.Sequence(
     *bestMuonTight * bestMuonTight5
     *bestMuonLooseMod * bestMuonLooseMod5
     *bestMuonTightMod * bestMuonTightMod5
-    *gemMuon * me0Muon #* me0MuonInd
+    #* me0MuonInd
 )
 
 import SimMuon.MCTruth.MuonTrackProducer_cfi
