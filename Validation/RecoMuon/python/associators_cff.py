@@ -970,7 +970,7 @@ muonAssociation_seq = cms.Sequence(
       tpToLooseSel0MuonAssociation
       #+tpToLooseSelUncMuonAssociation
       +tpToLooseSel05MuonAssociation
-      #+tpToLooseModSel0MuonAssociation
+      +tpToLooseModSel0MuonAssociation
       #+tpToLooseModSelUncMuonAssociation
       #+tpToLooseModSel05MuonAssociation
      )
@@ -981,7 +981,7 @@ muonAssociation_seq = cms.Sequence(
       tpToTightSel0MuonAssociation
       #+tpToTightSelUncMuonAssociation
       +tpToTightSel05MuonAssociation
-      #+tpToTightModSel0MuonAssociation
+      +tpToTightModSel0MuonAssociation
       #+tpToTightModSelUncMuonAssociation
       #+tpToTightModSel05MuonAssociation
     )

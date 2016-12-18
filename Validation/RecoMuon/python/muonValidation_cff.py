@@ -815,7 +815,6 @@ muonValidation_seq = cms.Sequence(
 #	+staUpdMuonTrackVMuonAssoc2St+
 #   +staUpdMuonTrackVMuonAssoc2StTime
 	+ glbMuonTrackVMuonAssoc
-#
 	#+ trkProbeTrackVSelMuonAssoc
 	#+ staUpdMuonTrackVSelMuonAssoc+staUpdMuonTrackVSel2MuonAssoc
 	#+ staUpdMuonTrackVSelMuonAssoc2StTime
@@ -828,8 +827,8 @@ muonValidation_seq = cms.Sequence(
     #+ looseMuonTrackVSelUncMuonAssoc
 	#+looseMuonTrackVSel4MuonAssoc
 	#+ looseMuonTrackVSel35MuonAssoc
- 	+ looseMuonTrackVSel05MuonAssoc
-	#+ looseMuonTrackVSel35SimMuonAssoc 
+# 	+ looseMuonTrackVSel05MuonAssoc
+	#+ looseMuonTrackVSel35SimMuonAssoc
 	+ looseMuonTrackVSel05SimMuonAssoc
 	#+ tightMuonTrackVSelMuonAssoc+tightMuonTrackVSel2MuonAssoc
 	#+ tightMuonTrackVSel3MuonAssoc 
@@ -837,17 +836,17 @@ muonValidation_seq = cms.Sequence(
     #+ tightMuonTrackVSelUncMuonAssoc
 	#+tightMuonTrackVSel4MuonAssoc
 	#+ tightMuonTrackVSel35MuonAssoc 
-	+ tightMuonTrackVSel05MuonAssoc
-	#+ tightMuonTrackVSel35SimMuonAssoc 
+#	+ tightMuonTrackVSel05MuonAssoc
+	#+ tightMuonTrackVSel35SimMuonAssoc
 	+ tightMuonTrackVSel05SimMuonAssoc
-#	+ looseModMuonTrackVSel0MuonAssoc
+	+ looseModMuonTrackVSel0MuonAssoc
     #+ looseModMuonTrackVSelUncMuonAssoc
 # 	+ looseModMuonTrackVSel05MuonAssoc
-#	+ looseModMuonTrackVSel05SimMuonAssoc
-#	+ tightModMuonTrackVSel0MuonAssoc
+	+ looseModMuonTrackVSel05SimMuonAssoc
+	+ tightModMuonTrackVSel0MuonAssoc
     #+ tightModMuonTrackVSelUncMuonAssoc
 # 	+ tightModMuonTrackVSel05MuonAssoc
-#   + tightModMuonTrackVSel05SimMuonAssoc
+   + tightModMuonTrackVSel05SimMuonAssoc
 #	+ recoMuonVMuAssoc_trk+recoMuonVMuAssoc_sta+recoMuonVMuAssoc_glb+recoMuonVMuAssoc_tgt
 	#+ bestMuonLooseTrackVTrackAssoc #+ bestMuonLooseTrackVTrackAssoc5
 #	+ bestMuonLoose2TrackVTrackAssoc + bestMuonLoose2TrackVTrackAssoc5
@@ -856,7 +855,6 @@ muonValidation_seq = cms.Sequence(
 #    +looseMuonTrackVChi25SimMuonAssoc
 #    +tightMuonTrackVChi2MuonAssoc
 #    +looseMuonTrackVChi25SimMuonAssoc
-
 )
 
 muonValidation_reduced_seq = cms.Sequence(
