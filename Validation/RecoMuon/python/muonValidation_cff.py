@@ -26,38 +26,6 @@ bestMuonLooseTrackVTrackAssoc5.ptMinTP = 5.0
 bestMuonLooseTrackVTrackAssoc5.usetracker = True
 bestMuonLooseTrackVTrackAssoc5.usemuon = True
 
-me0MuonTightTrackVMuonAssoc = Validation.RecoMuon.MuonTrackValidator_cfi.muonTrackValidator.clone()
-me0MuonTightTrackVMuonAssoc.associatormap = 'tpToME0MuonMuonAssociation'
-me0MuonTightTrackVMuonAssoc.associators = ('MuonAssociationByHits',)
-me0MuonTightTrackVMuonAssoc.label = ('me0Muon',)
-#me0MuonTightTrackVMuonAssoc.label = ('me0MuonInd',)
-me0MuonTightTrackVMuonAssoc.minRapidityTP = 2.0
-me0MuonTightTrackVMuonAssoc.maxRapidityTP = 2.8
-me0MuonTightTrackVMuonAssoc.useAbsEta = True
-me0MuonTightTrackVMuonAssoc.usetracker = True
-me0MuonTightTrackVMuonAssoc.usemuon = False
-me0MuonTightTrackVMuonAssoc.max = 2.8
-me0MuonTightTrackVMuonAssoc.nint = 28
-me0MuonTightTrackVMuonAssoc.maxRes = 2.8
-me0MuonTightTrackVMuonAssoc.nintRes = 14
-
-me0MuonTightPt5TrackVMuonAssoc = Validation.RecoMuon.MuonTrackValidator_cfi.muonTrackValidator.clone()
-me0MuonTightPt5TrackVMuonAssoc.associatormap = 'tpToME0MuonMuonAssociation'
-me0MuonTightPt5TrackVMuonAssoc.associators = ('MuonAssociationByHits',)
-me0MuonTightPt5TrackVMuonAssoc.label = ('me0Muon',)
-#me0MuonTightPt5TrackVMuonAssoc.label = ('me0MuonInd',)
-me0MuonTightPt5TrackVMuonAssoc.minRapidityTP = 2.0
-me0MuonTightPt5TrackVMuonAssoc.maxRapidityTP = 2.8
-me0MuonTightPt5TrackVMuonAssoc.useAbsEta = True
-me0MuonTightPt5TrackVMuonAssoc.ptMinTP = 5.0
-me0MuonTightPt5TrackVMuonAssoc.usetracker = True
-me0MuonTightPt5TrackVMuonAssoc.usemuon = False
-me0MuonTightPt5TrackVMuonAssoc.dirName = 'Muons/RecoMuonV/MultiTrack/Cut5/'
-me0MuonTightPt5TrackVMuonAssoc.max = 2.8
-me0MuonTightPt5TrackVMuonAssoc.nint = 28
-me0MuonTightPt5TrackVMuonAssoc.maxRes = 2.8
-me0MuonTightPt5TrackVMuonAssoc.nintRes = 14
-
 #-------------------------------------------------------------------------------------------------------------------
 
 staUpdMuonTrackVMuonAssoc2StTime = Validation.RecoMuon.MuonTrackValidator_cfi.muonTrackValidator.clone()
@@ -609,25 +577,35 @@ gemMuonTrackVMuonAssoc = Validation.RecoMuon.MuonTrackValidator_cfi.muonTrackVal
 gemMuonTrackVMuonAssoc.associatormap = 'tpToGEMMuonMuonAssociation'
 gemMuonTrackVMuonAssoc.associators = ('MuonAssociationByHits',)
 gemMuonTrackVMuonAssoc.label = ('extractGemMuons',)
-gemMuonTrackVMuonAssoc.minRapidityTP = -2.4
-gemMuonTrackVMuonAssoc.maxRapidityTP = +2.4
+gemMuonTrackVMuonAssoc.minRapidityTP = 1.6
+gemMuonTrackVMuonAssoc.maxRapidityTP = 2.4
 gemMuonTrackVMuonAssoc.usetracker = True
 gemMuonTrackVMuonAssoc.usemuon = False
-gemMuonTrackVMuonAssoc.min = -2.4
-gemMuonTrackVMuonAssoc.max = +2.4
-gemMuonTrackVMuonAssoc.nint = 48
+gemMuonTrackVMuonAssoc.min = 1.6
+gemMuonTrackVMuonAssoc.max = 2.4
+gemMuonTrackVMuonAssoc.nint = 8
+gemMuonTrackVMuonAssoc.minRes = 2.0
+gemMuonTrackVMuonAssoc.maxRes = 2.8
+gemMuonTrackVMuonAssoc.nintRes = 8
+gemMuonTrackVMuonAssoc.useFabsEta = True
+gemMuonTrackVMuonAssoc.useAbsEta = True
 
 me0MuonTrackVMuonAssoc = Validation.RecoMuon.MuonTrackValidator_cfi.muonTrackValidator.clone()
 me0MuonTrackVMuonAssoc.associatormap = 'tpToME0MuonMuonAssociation'
 me0MuonTrackVMuonAssoc.associators = ('MuonAssociationByHits',)
 me0MuonTrackVMuonAssoc.label = ('extractMe0Muons',)
-me0MuonTrackVMuonAssoc.minRapidityTP = -2.8
-me0MuonTrackVMuonAssoc.maxRapidityTP = +2.8
+me0MuonTrackVMuonAssoc.minRapidityTP = 2.0
+me0MuonTrackVMuonAssoc.maxRapidityTP = 2.8
 me0MuonTrackVMuonAssoc.usetracker = True
 me0MuonTrackVMuonAssoc.usemuon = False
-me0MuonTrackVMuonAssoc.min = -2.8
-me0MuonTrackVMuonAssoc.max = +2.8
-me0MuonTrackVMuonAssoc.nint = 56
+me0MuonTrackVMuonAssoc.min = 2.0
+me0MuonTrackVMuonAssoc.max = 2.8
+me0MuonTrackVMuonAssoc.nint = 8
+me0MuonTrackVMuonAssoc.minRes = 2.0
+me0MuonTrackVMuonAssoc.maxRes = 2.8
+me0MuonTrackVMuonAssoc.nintRes = 8
+me0MuonTrackVMuonAssoc.useFabsEta = True
+me0MuonTrackVMuonAssoc.useAbsEta = True
 
 # cosmics 2-leg reco
 trkCosmicMuonTrackVSelMuonAssoc = Validation.RecoMuon.MuonTrackValidator_cfi.muonTrackValidator.clone()
