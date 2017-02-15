@@ -2,7 +2,7 @@
 # using: 
 # Revision: 1.19 
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
-# with command line options: step4 --conditions auto:phase2_realistic -s HARVESTING:@phase2Validation+@phase2 --era Phase2C2_timing --filein file:step31_inDQM.root --scenario pp --filetype DQM --geometry Extended2023D4 --mc -n -1 --fileout file:step4.root --python HARVESTFullGlobal_2023D4Timing_PU0.py --no_exec
+# with command line options: step4 --conditions auto:phase2_realistic -s HARVESTING:@phase2Validation+@phase2 --era Phase2C2_timing --filein file:step31_inDQM.root --scenario pp --filetype DQM --geometry Extended2023D4 --mc -n -1 --fileout file:step4.root --python HARVESTFullGlobal_2023D4Timing_PU200.py --no_exec
 import FWCore.ParameterSet.Config as cms
 
 from Configuration.StandardSequences.Eras import eras
@@ -50,7 +50,7 @@ process.configurationMetadata = cms.untracked.PSet(
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
 
-process.dqmSaver.workflow = "/Global/CMSSW_9_0_0_pre4/RECO_PU0_D4Timing_ZMM"
+process.dqmSaver.workflow = "/Global/CMSSW_9_0_0_pre4/RECO_PU140_D4Timing_ZMM"
 
 # Path and EndPath definitions
 process.dqmHarvestingPOGMC = cms.Path(process.DQMOffline_SecondStep_PrePOGMC)

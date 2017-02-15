@@ -68,12 +68,15 @@ DQMGenericClient::DQMGenericClient(const ParameterSet& pset)
     opt.numerator = args[2];
     opt.denominator = args[3];
     opt.isProfile = false;
+    if(args.size() == 6) opt.events = args[5];
+    else opt.events = "numEvt";
 
-    const string typeName = args.size() == 4 ? "eff" : args[4];
+    const string typeName = (args.size() == 4) ? "eff" : args[4];
     if ( typeName == "eff" ) opt.type = 1;
     else if ( typeName == "fake" ) opt.type = 2;
+    else if ( typeName == "yield" ) opt.type = 3;
     else opt.type = 0;
- 
+
     efficOptions_.push_back(opt);
   }
   
@@ -124,7 +127,7 @@ DQMGenericClient::DQMGenericClient(const ParameterSet& pset)
     opt.denominator = args[3];
     opt.isProfile = true;
 
-    const string typeName = args.size() == 4 ? "eff" : args[4];
+    const string typeName = (args.size() == 4) ? "eff" : args[4];
     if ( typeName == "eff" ) opt.type = 1;
     else if ( typeName == "fake" ) opt.type = 2;
     else opt.type = 0;
@@ -377,9 +380,11 @@ void DQMGenericClient::dqmEndJob(DQMStore::IBooker & ibooker, DQMStore::IGetter 
     for ( vector<EfficOption>::const_iterator efficOption = efficOptions_.begin();
           efficOption != efficOptions_.end(); ++efficOption )
     {
-      computeEfficiency(ibooker, igetter, dirName, efficOption->name, efficOption->title, 
-                        efficOption->numerator, efficOption->denominator,
+
+      computeEfficiency(ibooker, igetter, dirName, efficOption->name, efficOption->title,
+                        efficOption->numerator, efficOption->denominator, efficOption->events,
                         efficOption->type, efficOption->isProfile);
+
     }
 
     for ( vector<ResolOption>::const_iterator resolOption = resolOptions_.begin();
@@ -398,8 +403,7 @@ void DQMGenericClient::dqmEndJob(DQMStore::IBooker & ibooker, DQMStore::IGetter 
   
 }
 
-void DQMGenericClient::computeEfficiency (DQMStore::IBooker& ibooker, DQMStore::IGetter& igetter, const string& startDir, const string& efficMEName,
-					 const string& efficMETitle, const string& recoMEName, const string& simMEName, const int type, const bool makeProfile)
+void DQMGenericClient::computeEfficiency (DQMStore::IBooker& ibooker, DQMStore::IGetter& igetter, const string& startDir, const string& efficMEName, const string& efficMETitle, const string& recoMEName, const string& simMEName, const string& evtMEName, const int type, const bool makeProfile)
 {
   if ( ! igetter.dirExists(startDir) ) {
     if ( verbose_ >= 2 || (verbose_ == 1 && !isWildcardUsed_) ) {
@@ -413,6 +417,7 @@ void DQMGenericClient::computeEfficiency (DQMStore::IBooker& ibooker, DQMStore::
 
   ME* simME  = igetter.get(startDir+"/"+simMEName);
   ME* recoME = igetter.get(startDir+"/"+recoMEName);
+  ME* evtME = igetter.get(startDir+"/"+evtMEName);
 
   if ( !simME ) {
     if ( verbose_ >= 2 || (verbose_ == 1 && !isWildcardUsed_) ) {
@@ -429,11 +434,20 @@ void DQMGenericClient::computeEfficiency (DQMStore::IBooker& ibooker, DQMStore::
     }
     return;
   }
+    
+  if ( !evtME ) {
+    if ( verbose_ >= 2 || (verbose_ == 1 && !isWildcardUsed_) ) {
+      LogInfo("DQMGenericClient") << "computeEfficiency() : " 
+                                  << "No evt-ME '" << evtMEName << "' found\n";
+    }
+    return;
+  }
 
   // Treat everything as the base class, TH1
   
   TH1* hSim  = simME ->getTH1();
   TH1* hReco = recoME->getTH1();
+  const int numEvts = evtME->getTH1()->GetBinContent(2);
   
   if ( !hSim || !hReco ) {
     if ( verbose_ >= 2 || (verbose_ == 1 && !isWildcardUsed_) ) {
@@ -559,7 +573,7 @@ void DQMGenericClient::computeEfficiency (DQMStore::IBooker& ibooker, DQMStore::
     // call the most generic efficiency function
     // works up to 3-d histograms
 
-    generic_eff (hSim, hReco, efficME, type);
+    generic_eff (hSim, hReco, efficME, type, numEvts);
   
     //   const int nBin = efficME->getNbinsX();
     //   for(int bin = 0; bin <= nBin; ++bin) {
@@ -939,7 +953,7 @@ void DQMGenericClient::findAllSubdirectories (DQMStore::IBooker& ibooker, DQMSto
 }
 
 
-void DQMGenericClient::generic_eff (TH1* denom, TH1* numer, MonitorElement* efficiencyHist, const int type) {
+void DQMGenericClient::generic_eff (TH1* denom, TH1* numer, MonitorElement* efficiencyHist, const int type, const int numEvts) {
   for (int iBinX = 1; iBinX < denom->GetNbinsX()+1; iBinX++){
     for (int iBinY = 1; iBinY < denom->GetNbinsY()+1; iBinY++){
       for (int iBinZ = 1; iBinZ < denom->GetNbinsZ()+1; iBinZ++){
@@ -950,15 +964,19 @@ void DQMGenericClient::generic_eff (TH1* denom, TH1* numer, MonitorElement* effi
         float denomVal = denom->GetBinContent(globalBinNum);
 
         float effVal = 0;
+        float errVal = 0;
 
         // fake eff is in use
         if (type == 2 ) {          
           effVal = denomVal ? (1 - numerVal / denomVal) : 0;
+          errVal = (denomVal && (effVal <=1)) ? sqrt(effVal*(1-effVal)/denomVal) : 0;
+        } else if (type == 3) {
+          effVal = numEvts ? ((denomVal - numerVal) / numEvts) : 0;
+          errVal = denomVal ? std::sqrt(numerVal + denomVal)/numEvts : 0;
         } else {
           effVal = denomVal ? numerVal / denomVal : 0;
+          errVal = (denomVal && (effVal <=1)) ? sqrt(effVal*(1-effVal)/denomVal) : 0;
         }
-
-        float errVal = (denomVal && (effVal <=1)) ? sqrt(effVal*(1-effVal)/denomVal) : 0;
 
         LogDebug ("DQMGenericClient") << "(iBinX, iBinY, iBinZ)  = "
              << iBinX << ", "

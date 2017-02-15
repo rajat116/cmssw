@@ -50,7 +50,7 @@ process.configurationMetadata = cms.untracked.PSet(
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
 
-process.dqmSaver.workflow = "/Global/CMSSW_9_0_0_pre2/RECO_PU200_D4Timing_ZMM"
+process.dqmSaver.workflow = "/Global/CMSSW_9_0_0_pre4/RECO_PU200_D4Timing_ZMM"
 
 # Path and EndPath definitions
 process.dqmHarvestingPOGMC = cms.Path(process.DQMOffline_SecondStep_PrePOGMC)
