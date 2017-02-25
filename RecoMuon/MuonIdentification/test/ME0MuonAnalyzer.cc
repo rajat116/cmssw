@@ -45,7 +45,7 @@
 //#include "SimMuon/MCTruth/interface/MuonAssociatorByHits.h"
 #include "SimTracker/TrackerHitAssociation/interface/TrackerHitAssociator.h"
 #include "SimTracker/Records/interface/TrackAssociatorRecord.h"
-#include "SimDataFormats/Associations/interface/TrackToTrackingParticleAssociator.h"
+//#include "SimDataFormats/Associations/interface/TrackToTrackingParticleAssociator.h"
 #include "DataFormats/RecoCandidate/interface/TrackAssociation.h"
 
 #include "DataFormats/MuonReco/interface/Muon.h"
@@ -121,7 +121,6 @@ public:
   edm::EDGetTokenT<ME0SegmentCollection> OurSegmentsToken_;
   std::vector<edm::EDGetTokenT<edm::View<reco::Track> > > track_Collection_Token;
 
-
   bool UseAssociators;
   bool RejectEndcapMuons;
   const TrackAssociatorByChi2Impl* associatorByChi2;
@@ -129,8 +128,9 @@ public:
 
 
   std::vector<std::string> associators;
-  std::vector<edm::InputTag> label;
-  std::vector<const reco::TrackToTrackingParticleAssociator*> associator;
+  //std::vector<edm::InputTag> label;
+  std::vector<std::string> label;
+  //std::vector<const reco::TrackToTrackingParticleAssociator*> associator;
 
   //Histos for plotting
   TString histoFolder;
@@ -248,7 +248,8 @@ ME0MuonAnalyzer::ME0MuonAnalyzer(const edm::ParameterSet& iConfig)
   UseAssociators = iConfig.getParameter< bool >("UseAssociators");
   associators = iConfig.getParameter< std::vector<std::string> >("associators");
 
-  label = iConfig.getParameter< std::vector<edm::InputTag> >("label");
+  //label = iConfig.getParameter< std::vector<edm::InputTag> >("label");
+  label = iConfig.getParameter< std::vector<std::string> >("label");
   edm::InputTag genParticlesTag ("genParticles");
   genParticlesToken_ = consumes<reco::GenParticleCollection>(genParticlesTag);
   edm::InputTag trackingParticlesTag ("mix","MergedTrackTruth");
@@ -267,7 +268,9 @@ ME0MuonAnalyzer::ME0MuonAnalyzer(const edm::ParameterSet& iConfig)
 
   if (UseAssociators) {
     for (auto const& thisassociator :associators) {
-      consumes<reco::TrackToTrackingParticleAssociator>(edm::InputTag(thisassociator));
+      consumes<reco::RecoToSimCollection>(edm::InputTag(thisassociator));
+      consumes<reco::SimToRecoCollection>(edm::InputTag(thisassociator));
+      //consumes<reco::TrackToTrackingParticleAssociator>(edm::InputTag(thisassociator));
     }
   }
 
@@ -581,14 +584,13 @@ ME0MuonAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
   Nevents_h->Fill(1);
   using namespace edm;
 
-
-  if (UseAssociators) {
-    edm::Handle<reco::TrackToTrackingParticleAssociator> theAssociator;
+  /*if (UseAssociators) {
+    Handle<reco::TrackToTrackingParticleAssociator> theAssociator;
     for (unsigned int w=0;w<associators.size();w++) {
       iEvent.getByLabel(associators[w],theAssociator);
       associator.push_back( theAssociator.product() );
     }
-  }
+  }*/
 
 
   using namespace reco;
@@ -880,7 +882,6 @@ ME0MuonAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
   //int w=0;
   //std::cout<<"associators size = "<<associators.size()<<std::endl;
   if (UseAssociators) {
-    for (unsigned int ww=0;ww<associators.size();ww++){
 
       for (unsigned int www=0;www<label.size();www++){
 
@@ -888,27 +889,18 @@ ME0MuonAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 	reco::SimToRecoCollection simRecColl;
 	edm::Handle<View<Track> >  trackCollection;
 	
-	
-	
-	unsigned int trackCollectionSize = 0;
+        Handle<reco::SimToRecoCollection > simtorecoCollectionH;
+        iEvent.getByLabel(associators[www],simtorecoCollectionH);
+        simRecColl= *(simtorecoCollectionH.product());
+
+        Handle<reco::RecoToSimCollection > recotosimCollectionH;
+        iEvent.getByLabel(associators[www],recotosimCollectionH);
+        recSimColl= *(recotosimCollectionH.product());
+
+        unsigned int trackCollectionSize = 0;
+        iEvent.getByToken(track_Collection_Token[www], trackCollection);
+        trackCollectionSize = trackCollection->size();	
       
-	if(!iEvent.getByToken(track_Collection_Token[www], trackCollection)){
-	  recSimColl.post_insert();
-	  simRecColl.post_insert();
-	  
-	}
-	
-	else {
-	  trackCollectionSize = trackCollection->size();
-	  recSimColl=associator[ww]->associateRecoToSim(trackCollection,
-							trackingParticles);
-	  
-	  
-	  simRecColl=associator[ww]->associateSimToReco(trackCollection,
-						      trackingParticles);
-	  
-	  
-	}
 	
 	for (TrackingParticleCollection::size_type i=0; i<trackingParticles->size(); i++){
 	  
@@ -1025,7 +1017,8 @@ ME0MuonAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
   			  Chi2MatchedME0Muon_SmallBins_Pt->Fill(tpr->pt());
   			  Chi2MatchedME0Muon_VariableBins_Pt->Fill(tpr->pt());
   			}
-			
+
+                        std::cout<<"eta = "<<tpr->eta()<<std::endl;	
   			if ( (track->pt() > 5.0) && (track->pt() <= 10.0) )  	Chi2MatchedME0Muon_Eta_5_10->Fill(fabs(tpr->eta()));
   			if ( (track->pt() > 9.0) && (track->pt() <= 11.0) )  	Chi2MatchedME0Muon_Eta_9_11->Fill(fabs(tpr->eta()));
   			if ( (track->pt() > 10.0) && (track->pt() <= 50.0) )	Chi2MatchedME0Muon_Eta_10_50->Fill(fabs(tpr->eta()));
@@ -1130,7 +1123,6 @@ ME0MuonAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 
       }//END for(View<Track>::size_type i=0; i<trackCollectionSize; ++i){
       }// END for (unsigned int www=0;www<label.size();www++)
-    }//END     for (unsigned int ww=0;ww<associators.size();ww++){
   }//END if UseAssociators
   
   for (std::vector<Track>::const_iterator thisTrack = generalTracks->begin();
