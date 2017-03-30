@@ -47,4 +47,5 @@ run3_GEM.toModify( SimMuonRAW, outputCommands = SimMuonRAW.outputCommands + ['ke
 run3_GEM.toModify( SimMuonRECO, outputCommands = SimMuonRECO.outputCommands + ['keep StripDigiSimLinkedmDetSetVector_simMuonGEMDigis_*_*'] )
 from Configuration.Eras.Modifier_phase2_muon_cff import phase2_muon
 phase2_muon.toModify( SimMuonFEVTDEBUG, outputCommands = SimMuonFEVTDEBUG.outputCommands + ['keep *_simMuonME0Digis_*_*',
+                                                                                            'keep *_simMuonME0TrivDigis_*_*',
                                                                                             'keep *_simMuonME0ReDigis_*_*'] )

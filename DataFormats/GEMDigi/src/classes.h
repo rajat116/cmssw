@@ -13,8 +13,12 @@
 #include <DataFormats/GEMDigi/interface/ME0DigiPreReco.h>
 #include <DataFormats/GEMDigi/interface/ME0DigiPreRecoCollection.h>
 
+#include <DataFormats/GEMDigi/interface/ME0Digi.h>
+#include <DataFormats/GEMDigi/interface/ME0DigiCollection.h>
+
 #include <DataFormats/Common/interface/Wrapper.h>
 #include <vector>
+#include <map>
 
 namespace DataFormats_GEMDigi {
   struct dictionary {
@@ -50,5 +54,13 @@ namespace DataFormats_GEMDigi {
     edm::Wrapper<ME0DigiPreRecoCollection> wm;
     ME0DigiPreRecoMap mmap;
     edm::Wrapper<ME0DigiPreRecoMap> wmmap;
+
+    ME0Digi me;
+    std::vector<ME0Digi>  vme;
+    std::vector<std::vector<ME0Digi> >  vvme;
+    ME0DigiCollection mecol;
+    edm::Wrapper<ME0DigiCollection> wme;
+
+    edm::Wrapper<std::map< std::pair<int,int>, int > > a2;
   };
 }
