@@ -73,11 +73,6 @@ void ME0SimpleModel::simulateSignal(const ME0EtaPartition* roll, const edm::PSim
   bool digiElec = false;
   for (edm::PSimHitContainer::const_iterator hit = simHits.begin(); hit != simHits.end(); ++hit)
   {
-//just for background test - skip all primaries
-    continue;
-
-std::cout << "echo I should not be here" << std::endl;
-
     if (std::abs(hit->particleType()) != 13 && digitizeOnlyMuons_)
       continue;
     double elecEff = 0.;

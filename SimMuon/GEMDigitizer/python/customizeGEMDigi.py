@@ -399,7 +399,6 @@ def customize_digi_addGEM_addME0(process):
         process.simMuonRPCDigis +
         process.simMuonGEMDigis +
         process.simMuonGEMPadDigis +
-#        process.simMuonME0Digis
         process.simMuonME0Digis+
         process.simMuonME0TrivDigis
 
@@ -424,7 +423,7 @@ def customize_digi_addGEM_addME0_muon_only(process):
     process = load_ME0_digitizers(process)
     process = load_ME0Triv_digitizers(process)
     process = customize_random_GEMDigi(process)
-#    process = customize_random_ME0Digi(process)
+    process = customize_random_ME0Digi(process)
     process = customize_random_ME0DigiTriv(process)
     process = customize_mix_addGEM_addME0_muon_only(process)
     process.muonDigi = cms.Sequence(
@@ -433,7 +432,6 @@ def customize_digi_addGEM_addME0_muon_only(process):
         process.simMuonRPCDigis +
         process.simMuonGEMDigis +
         process.simMuonGEMPadDigis +
-#        process.simMuonME0Digis
         process.simMuonME0Digis+
         process.simMuonME0TrivDigis
     )
@@ -452,7 +450,7 @@ def customize_digi_addGEM_addME0_gem_only(process):
     process = load_ME0_digitizers(process)
     process = load_ME0Triv_digitizers(process)
     process = customize_random_GEMDigi(process)
-#    process = customize_random_ME0Digi(process)
+    process = customize_random_ME0Digi(process)
     process = customize_random_ME0DigiTriv(process)
     process = customize_mix_addGEM_addME0_muon_only(process)
     process.pdigi = cms.Sequence(
@@ -460,7 +458,6 @@ def customize_digi_addGEM_addME0_gem_only(process):
         cms.SequencePlaceholder("mix")*
         process.simMuonGEMDigis*
         process.simMuonGEMPadDigis*
-#        process.simMuonME0Digis
         process.simMuonME0Digis*
         process.simMuonME0TrivDigis
     )
@@ -488,4 +485,13 @@ def append_GEMDigi_event(process):
             # getattr(process,b).outputCommands.append('keep *_simSiPixelDigis_*_*')
             # getattr(process,b).outputCommands.append('keep *_simSiStripDigis_*_*')
 
+    return process
+
+# Customizations for the background
+def customize_digi_noGEMbkg(process):
+    process.simMuonGEMDigis.doBkgNoise = False
+    return process
+
+def customize_digi_noGEMsafety(process):
+    process.simMuonGEMDigis.rateFact = 1
     return process
