@@ -34,23 +34,22 @@ ME0DigiModel(config)
 , doNoiseCLS_(config.getParameter<bool> ("doNoiseCLS"))
 , fixedRollRadius_(config.getParameter<bool> ("fixedRollRadius"))
 , simulateElectronBkg_(config.getParameter<bool> ("simulateElectronBkg"))
-, simulateLowNeutralRate_(config.getParameter<bool>("simulateLowNeutralRate"))
+//, simulateLowNeutralRate_(config.getParameter<bool>("simulateLowNeutralRate"))	//nofurther use of this parameter
 , instLumi_(config.getParameter<double> ("instLumi"))
 , rateFact_(config.getParameter<double> ("rateFact"))
 {
 //initialise parameters from the fit:
-//params for pol3 model of electron bkg for ME0 (GE1/1):
-  ME0ElecBkgParam0 = 3402.63;
-  ME0ElecBkgParam1 = -42.9979;
-  ME0ElecBkgParam2 = 0.188475;
-  ME0ElecBkgParam3 = -0.0002822;
-//Low Rate model L=10^{34}cm^{-2}s^{-1}
-//const and slope for the expo model of neutral bkg for ME0 (GE1/1):
-  constNeuME0 = 807.;
-  slopeNeuME0 = -0.01443;
-//params for expo model of neutral bkg for ME0 (GE1/1):
-  constNeuME0_highRate = 1.02603e+04;
-  slopeNeuME0_highRate = -1.62806e-02;
+//params for charged background model for ME0 at L=5x10^{34}cm^{-2}s^{-1}
+  ME0ElecBkgParam0 = 0.00171409;
+  ME0ElecBkgParam1 = 4900.56;
+  ME0ElecBkgParam2 = 710909;
+  ME0ElecBkgParam3 = -4327.25;
+
+//params for neutral background model for ME0 at L=5x10^{34}cm^{-2}s^{-1}
+  ME0NeuBkgParam0 = 0.00386257;
+  ME0NeuBkgParam1 = 6344.65;
+  ME0NeuBkgParam2 = 16627700;
+  ME0NeuBkgParam3 = -102098;
 }
 
 ME0SimpleModel::~ME0SimpleModel()
@@ -74,6 +73,11 @@ void ME0SimpleModel::simulateSignal(const ME0EtaPartition* roll, const edm::PSim
   bool digiElec = false;
   for (edm::PSimHitContainer::const_iterator hit = simHits.begin(); hit != simHits.end(); ++hit)
   {
+//just for background test - skip all primaries
+    continue;
+
+std::cout << "echo I should not be here" << std::endl;
+
     if (std::abs(hit->particleType()) != 13 && digitizeOnlyMuons_)
       continue;
     double elecEff = 0.;
@@ -162,7 +166,6 @@ int ME0SimpleModel::getSimHitBx(const PSimHit* simhit, CLHEP::HepRandomEngine* e
 }
 
 void ME0SimpleModel::simulateNoise(const ME0EtaPartition* roll, CLHEP::HepRandomEngine* engine)
-//void ME0SimpleModel::simulateNoise(const ME0EtaPartition* roll)
 {
   if (!doBkgNoise_)
     return;
@@ -170,6 +173,7 @@ void ME0SimpleModel::simulateNoise(const ME0EtaPartition* roll, CLHEP::HepRandom
   const int nstrips(roll->nstrips());
   double trArea(0.0);
   double trStripArea(0.0);
+
   if (me0Id.region() == 0)
   {
     throw cms::Exception("Geometry")
@@ -183,6 +187,8 @@ void ME0SimpleModel::simulateNoise(const ME0EtaPartition* roll, CLHEP::HepRandom
   const float rollRadius(fixedRollRadius_ ? top_->radius() : 
        top_->radius() + CLHEP::RandFlat::shoot(engine, -1.*top_->stripLength()/2., top_->stripLength()/2.));
 
+  const float rSqrtR = rollRadius * sqrt(rollRadius);
+
 //calculate noise from model
   double averageNeutralNoiseRatePerRoll = 0.;
   double averageNoiseElectronRatePerRoll = 0.;
@@ -192,23 +198,17 @@ void ME0SimpleModel::simulateNoise(const ME0EtaPartition* roll, CLHEP::HepRandom
     throw cms::Exception("Geometry") << "ME0SimpleModel::simulateNoise() - this ME0 id is from station 1, which cannot happen: " <<roll->id() << "\n";
   }
   else
-    {
-      //simulate neutral background for ME0 
-    if (simulateLowNeutralRate_)
-      averageNeutralNoiseRatePerRoll = constNeuME0 * TMath::Exp(slopeNeuME0 * rollRadius);
-    else
-      averageNeutralNoiseRatePerRoll = constNeuME0_highRate * TMath::Exp(slopeNeuME0_highRate * rollRadius);
+  {
+    averageNeutralNoiseRatePerRoll = ME0NeuBkgParam0 * rollRadius* TMath::Exp(ME0NeuBkgParam1/rSqrtR) + ME0NeuBkgParam2/rSqrtR + ME0NeuBkgParam3/(sqrt(rollRadius));
+
 //simulate electron background for ME0
     if (simulateElectronBkg_)
-      averageNoiseElectronRatePerRoll = ME0ElecBkgParam0
-                                      + ME0ElecBkgParam1 * rollRadius
-                                      + ME0ElecBkgParam2 * rollRadius * rollRadius
-                                      + ME0ElecBkgParam3 * rollRadius * rollRadius * rollRadius;
-    averageNoiseRatePerRoll = averageNeutralNoiseRatePerRoll + averageNoiseElectronRatePerRoll;
-    averageNoiseRatePerRoll *= instLumi_*rateFact_*1.0/5;    
-    }
-  
+    averageNoiseElectronRatePerRoll = ME0ElecBkgParam0 * rSqrtR* TMath::Exp(ME0ElecBkgParam1/rSqrtR) + ME0ElecBkgParam2/rSqrtR + ME0ElecBkgParam3/(sqrt(rollRadius));
 
+    averageNoiseRatePerRoll = averageNeutralNoiseRatePerRoll + averageNoiseElectronRatePerRoll;
+    averageNoiseRatePerRoll *= instLumi_*rateFact_*1.0/5;  
+  }
+  
 //simulate intrinsic noise
   if(simulateIntrinsicNoise_)
   {
@@ -271,7 +271,7 @@ void ME0SimpleModel::simulateNoise(const ME0EtaPartition* roll, CLHEP::HepRandom
 std::vector<std::pair<int, int> > ME0SimpleModel::simulateClustering(const ME0EtaPartition* roll,
     const PSimHit* simHit, const int bx, CLHEP::HepRandomEngine* engine)
 {
-  const StripTopology& topology = roll->specificTopology(); // const LocalPoint& entry(simHit->entryPoint());
+  const StripTopology& topology = roll->specificTopology();
   const LocalPoint& hit_position(simHit->localPosition());
   const int nstrips(roll->nstrips());
   int centralStrip = 0;

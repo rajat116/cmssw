@@ -57,23 +57,22 @@ private:
   bool fixedRollRadius_;
   bool simulateIntrinsicNoise_;
   bool simulateElectronBkg_;
-  bool simulateLowNeutralRate_;
+//  bool simulateLowNeutralRate_;	//no further use if this parameter
   double instLumi_;
   double rateFact_;
-//parameters from the fit:
-//params for pol3 model of electron bkg for ME0 (GE1/1):
+
+//params for charged background model for ME0 at L=5x10^{34}cm^{-2}s^{-1}
   double ME0ElecBkgParam0;
   double ME0ElecBkgParam1;
   double ME0ElecBkgParam2;
   double ME0ElecBkgParam3;
-//Low Rate model L=10^{34}cm^{-2}s^{-1}
-//const and slope for expo model of neutral bkg for GE1/1:
-  double constNeuME0;
-  double slopeNeuME0;
-//High Rate model L=5x10^{34}cm^{-2}s^{-1}
-//params for expo model of neutral bkg for ME0 (GE1/1):
-  double constNeuME0_highRate;
-  double slopeNeuME0_highRate;
+
+//params for neutral background model for ME0 at L=5x10^{34}cm^{-2}s^{-1}
+  double ME0NeuBkgParam0;
+  double ME0NeuBkgParam1;
+  double ME0NeuBkgParam2;
+  double ME0NeuBkgParam3;
+
 };
 #endif
 

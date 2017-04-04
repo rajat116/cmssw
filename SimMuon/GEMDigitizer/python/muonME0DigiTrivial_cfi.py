@@ -20,9 +20,10 @@ simMuonME0TrivDigis = cms.EDProducer("ME0DigiProducer",
     fixedRollRadius = cms.bool(True), #Uses fixed radius in the center of the roll
     simulateIntrinsicNoise = cms.bool(False),
     simulateElectronBkg = cms.bool(True),	#False=simulate only neutral Bkg
-    simulateLowNeutralRate = cms.bool(False),	#True=neutral_Bkg at L=1x10^{34}, False at L=5x10^{34}cm^{-2}s^{-1}
+#    simulateLowNeutralRate = cms.bool(False),	#True=neutral_Bkg at L=1x10^{34}, False at L=5x10^{34}cm^{-2}s^{-1}, No further need ot this parameter,
+						#since the effect ot inst. lumi now is controled by the instLumi parameter.
     instLumi = cms.double(7.5),                 # in units of 1E34 cm^-2 s^-1. Internally the background is parametrized from FLUKA+GEANT results at 5x10^34 (PU140). We are adding a 1.5 factor for PU200
-    rateFact = cms.double(2.0)                 # We are adding also a safety factor of 2 to take into account the new beam pipe effect (not yet known). Hits can be thrown away later at re-digi step.
+    rateFact = cms.double(1.0)                 # change the safety factor from 2 to 1, since the effect of the new beam pipe is included in the new background model
 
 )
 

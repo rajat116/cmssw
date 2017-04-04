@@ -14,6 +14,9 @@ DEFINE_EDM_PLUGIN(GEMDigiModelFactory, GEMSimpleModel, "GEMSimpleModel");
 #include "SimMuon/GEMDigitizer/interface/GEMPadDigiProducer.h"
 DEFINE_FWK_MODULE(GEMPadDigiProducer);
 
+#include "SimMuon/GEMDigitizer/interface/GEMTrivialModel.h"
+DEFINE_EDM_PLUGIN(GEMDigiModelFactory, GEMTrivialModel, "GEMTrivialModel");
+
 #include "SimMuon/GEMDigitizer/interface/GEMPadDigiClusterProducer.h"
 DEFINE_FWK_MODULE(GEMPadDigiClusterProducer);
 
