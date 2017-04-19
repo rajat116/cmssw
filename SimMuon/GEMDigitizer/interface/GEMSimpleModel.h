@@ -62,15 +62,17 @@ private:
   double GE11ElecBkgParam0;
   double GE11ElecBkgParam1;
   double GE11ElecBkgParam2;
-  double GE11ElecBkgParam3;
-//params for expo of electron bkg for GE2/1:
-  double constElecGE21;
-  double slopeElecGE21;
+//params for pol3 model of electron bkg for GE2/1:
+  double GE21ElecBkgParam0;
+  double GE21ElecBkgParam1;
+  double GE21ElecBkgParam2;
+
+
 //Neutral Bkg
-//Low Rate model L=10^{34}cm^{-2}s^{-1}
+//Low Rate model L=10^{34}cm^{-2}s^{-1}; obsolete, remove it but check for the dependencies in the configuration and customisation files
 //const and slope for expo model of neutral bkg for GE1/1:
-  double constNeuGE11;
-  double slopeNeuGE11;
+  double constNeuGE11;	//obsolete, remove it but check for the dependencies in the configuration and customisation files
+  double slopeNeuGE11;	//obsolete, remove it but check for the dependencies in the configuration and customisation files
 //params for pol5 model of neutral bkg for GE2/1:
   double GE21NeuBkgParam0;
   double GE21NeuBkgParam1;
@@ -78,17 +80,21 @@ private:
   double GE21NeuBkgParam3;
   double GE21NeuBkgParam4;
   double GE21NeuBkgParam5;
+
 //High Rate model L=5x10^{34}cm^{-2}s^{-1}
 //params for expo model of neutral bkg for GE1/1:
-  double constNeuGE11_highRate;
-  double slopeNeuGE11_highRate;
-//params for pol5 model of neutral bkg for GE2/1:
+  double GE11ModNeuBkgParam0;
+  double GE11ModNeuBkgParam1;
+  double GE11ModNeuBkgParam2;
+//params for pol3 model of neutral bkg for GE2/1:
   double GE21ModNeuBkgParam0;
   double GE21ModNeuBkgParam1;
   double GE21ModNeuBkgParam2;
-  double GE21ModNeuBkgParam3;
-  double GE21ModNeuBkgParam4;
-  double GE21ModNeuBkgParam5;
+   
+  double instLumi_;
+  double rateFact_;
+  const double referenceInstLumi = 5; //In units of 10^34 Hz/cm^2. Internally the functions based on the FLUKA+GEANT simulation are normalized to 5x10^34 Hz/cm^2, this is needed to rescale them properly
+
 };
 #endif
 

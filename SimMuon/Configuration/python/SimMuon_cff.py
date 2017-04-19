@@ -18,12 +18,14 @@ from CondCore.DBCommon.CondDBCommon_cfi import *
 
 from SimMuon.GEMDigitizer.muonGEMDigi_cff import *
 from SimMuon.GEMDigitizer.muonME0Digi_cff import *
+from SimMuon.GEMDigitizer.muonME0DigiTrivial_cfi import *	#for future ME0trivial or ME0simple should replrace muonME0Digi, which are now pseudodigis
 
 _run3_muonDigi = muonDigi.copy()
 _run3_muonDigi += muonGEMDigi
 
 _phase2_muonDigi = _run3_muonDigi.copy()
 _phase2_muonDigi += muonME0Digi
+_phase2_muonDigi += simMuonME0TrivDigis
 
 def _modifySimMuonForPhase2( theProcess ):
     theProcess.rpcphase2recovery_essource = cms.ESSource("PoolDBESSource",

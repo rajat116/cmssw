@@ -23,6 +23,7 @@
 
 <use   name="SimDataFormats/CrossingFrame"/>
 <use   name="SimDataFormats/GEMDigiSimLink"/>
+<use   name="SimDataFormats/ME0DigiSimLink"/>
 <use   name="SimGeneral/HepPDTRecord"/>
 <use   name="Utilities/General"/>
 <use   name="CommonTools/UtilAlgos"/>
