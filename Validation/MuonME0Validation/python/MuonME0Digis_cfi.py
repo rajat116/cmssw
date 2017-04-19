@@ -13,4 +13,6 @@ me0DigiValidation = cms.EDAnalyzer('ME0DigisValidation',
     # st1 xmin, xmax, st2_short xmin, xmax, st2_long xmin, xmax, st1 ymin, ymax...
     RangeGlobalZR = cms.untracked.vdouble(525,555,60,160),
     nBinGlobalXY = cms.untracked.int32(160),
+    EffSaveRootFile = cms.untracked.bool(True),
+    EffRootFileName = cms.untracked.string('ME0Digis_ME.root'),
 )

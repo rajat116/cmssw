@@ -5,7 +5,20 @@
 //Data Formats
 #include "DataFormats/GEMDigi/interface/ME0DigiPreReco.h"
 #include "DataFormats/GEMDigi/interface/ME0DigiPreRecoCollection.h"
+#include "DQMServices/Core/interface/DQMEDAnalyzer.h"
+#include "FWCore/Framework/interface/EDAnalyzer.h"
+#include "FWCore/Framework/interface/ESHandle.h"
+#include "FWCore/ServiceRegistry/interface/Service.h"
 
+//Log messages
+#include "FWCore/MessageLogger/interface/MessageLogger.h"
+#include "FWCore/ServiceRegistry/interface/Service.h"
+#include "CommonTools/UtilAlgos/interface/TFileService.h"
+
+using namespace std;
+using namespace edm;
+class DQMStore;
+class MonitorElement;
 
 class ME0DigisValidation : public ME0BaseValidation
 {
@@ -13,6 +26,7 @@ public:
     explicit ME0DigisValidation( const edm::ParameterSet& );
     ~ME0DigisValidation();
     void bookHistograms(DQMStore::IBooker &, edm::Run const &, edm::EventSetup const &) override;
+    virtual void endRun(edm::Run const&, edm::EventSetup const&) override;
     void analyze(const edm::Event& e, const edm::EventSetup&) override;
     bool isMatched(const int, const int, const int, const int, const int, const int);
 private:
@@ -48,10 +62,11 @@ private:
     MonitorElement* me0_strip_dg_bkgNeutral_rad;
     
     edm::EDGetToken InputTagToken_Digi;
+    bool EffSaveRootFile_;
+    std::string EffRootFileName_;
     double sigma_x_, sigma_y_;
-    
+     DQMStore * dbe_;
     int npart;
-    
 };
 
 #endif

@@ -7,10 +7,13 @@ ME0DigisValidation::ME0DigisValidation(const edm::ParameterSet& cfg):  ME0BaseVa
   InputTagToken_Digi = consumes<ME0DigiPreRecoCollection>(cfg.getParameter<edm::InputTag>("digiInputLabel"));
   sigma_x_ = cfg.getParameter<double>("sigma_x");
   sigma_y_ = cfg.getParameter<double>("sigma_y");
+  EffSaveRootFile_ = cfg.getUntrackedParameter<bool>("EffSaveRootFile");
+  EffRootFileName_ = cfg.getUntrackedParameter<std::string>("EffRootFileName", "");
+ dbe_ = edm::Service<DQMStore>().operator->();
 }
 
 void ME0DigisValidation::bookHistograms(DQMStore::IBooker & ibooker, edm::Run const & Run, edm::EventSetup const & iSetup ) {
-
+  
   LogDebug("MuonME0DigisValidation")<<"Info: Loading Geometry information\n";
   ibooker.setCurrentFolder("MuonME0DigisV/ME0DigisTask");
 
@@ -36,12 +39,13 @@ void ME0DigisValidation::bookHistograms(DQMStore::IBooker & ibooker, edm::Run co
   me0_strip_dg_den_eta_tot = ibooker.book1D( "me0_strip_dg_den_eta_tot", "Denominator; #eta; Entries", 12, 1.8, 3.0);
   me0_strip_dg_num_eta_tot = ibooker.book1D( "me0_strip_dg_num_eta_tot", "Numerator; #eta; Entries", 12, 1.8, 3.0);
     
-  float bins[] = {62.3, 68.2, 74.1, 81.1, 88.2, 96.6, 104.9, 115.1, 125.2, 137.3, 149.5};
+  //float bins[] = {62.3, 68.2, 74.1, 81.1, 88.2, 96.6, 104.9, 115.1, 125.2, 137.3, 149.5};
+  float bins[] = {62.3, 70.0, 77.7, 87.1, 96.4, 108.2, 119.9, 134.7, 149.5};
   int binnum = sizeof(bins)/sizeof(float) - 1;
     
   me0_strip_dg_bkg_rad_tot = ibooker.book1D( "me0_strip_dg_bkg_radius_tot", "Total neutron background; Radius; Entries", binnum, bins);
-  me0_strip_dg_bkgElePos_rad = ibooker.book1D( "me0_strip_dg_bkgElePos_radius", "Neutron background: electrons+positrons; Radius; Entries", binnum, bins);
-  me0_strip_dg_bkgNeutral_rad = ibooker.book1D( "me0_strip_dg_bkgNeutral_radius", "Neutron background: gammas+neutrons; Radius; Entries", binnum, bins);
+  me0_strip_dg_bkgElePos_rad = ibooker.book1D( "me0_strip_dg_bkgElePos_radius", "Neutron background: electrons+positrons; Radius; Entries",binnum, bins);
+  me0_strip_dg_bkgNeutral_rad = ibooker.book1D( "me0_strip_dg_bkgNeutral_radius", "Neutron background: gammas+neutrons; Radius; Entries",binnum, bins);
 
   for( unsigned int region_num = 0 ; region_num < nregion ; region_num++ ) {
       me0_strip_dg_zr_tot[region_num] = BookHistZR(ibooker,"me0_strip_dg_tot","Digi",region_num);
@@ -79,6 +83,10 @@ void ME0DigisValidation::bookHistograms(DQMStore::IBooker & ibooker, edm::Run co
 ME0DigisValidation::~ME0DigisValidation() {
 }
 
+void ME0DigisValidation::endRun(edm::Run const&, edm::EventSetup const&)
+{
+  if (EffSaveRootFile_ ) dbe_->save(EffRootFileName_);
+}
 
 void ME0DigisValidation::analyze(const edm::Event& e,
                                      const edm::EventSetup& iSetup)
@@ -97,7 +105,6 @@ void ME0DigisValidation::analyze(const edm::Event& e,
     edm::LogError("ME0DigisValidation") << "Cannot get ME0Hits/ME0Digis by Token simInputTagToken";
     return ;
   }
-    
   num_evts->Fill(1);
   bool toBeCounted1 = true;
 
